@@ -1,7 +1,7 @@
+import fs from 'fs';
 import fsPromises from 'fs/promises';
 import Jimp from 'jimp';
 import minimist from 'minimist';
-import fs from 'fs';
 import { NstrumentaClient } from 'nstrumenta';
 import ws from 'ws';
 import { $ } from 'zx';

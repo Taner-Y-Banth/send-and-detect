@@ -1,25 +1,23 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { HashRouter, Route, Routes } from 'react-router-dom';
-import AppDrawer from './AppDrawer';
-import Camera from './Camera';
-import Home from './Home';
-import './index.css';
-import Viewer from './Viewer';
-import Ocr from './Ocr';
+import React from "react";
+import ReactDOM from "react-dom";
+import { HashRouter, Route, Routes } from "react-router-dom";
+import AppDrawer from "./AppDrawer";
+import Camera from "./Camera";
+import "./index.css";
+import Live from "./Live";
+import Viewer from "./Viewer";
 
 ReactDOM.render(
   <React.StrictMode>
     <HashRouter>
       <Routes>
         <Route path="/" element={<AppDrawer />}>
-          <Route path="" element={<Home />} />
-          <Route path="camera" element={<Camera />} />
+          <Route path="" element={<Live />} />
+          <Route path="Camera" element={<Camera />} />
           <Route path="viewer" element={<Viewer />} />
-          <Route path="ocr" element={<Ocr />} />
         </Route>
       </Routes>
     </HashRouter>
   </React.StrictMode>,
-  document.getElementById('root')
+  document.getElementById("root")
 );

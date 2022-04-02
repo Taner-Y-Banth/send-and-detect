@@ -4,12 +4,11 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-    
         {
             "type": "pwa-chrome",
             "request": "launch",
             "name": "Launch Chrome against localhost",
-            "url": "http://localhost:3000?wsUrl=wss://detect-wj23a5zlwluyvlo6vawr.vm.nstrumenta.com&apiKey=fc883ae0-252c-47ab-8530-2228ef879d79",
+            "url": "http://localhost:8080",
             "webRoot": "${workspaceFolder}"
         }
     ]

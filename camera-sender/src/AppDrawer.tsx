@@ -136,17 +136,6 @@ export default function AppDrawer() {
 
           <ListItem>
             <NavLink
-              to="ocr"
-              style={{ textDecoration: "none" }}
-            >
-              <Button variant='contained' >
-                OCR Data
-              </Button>
-            </NavLink>
-          </ListItem>
-
-          <ListItem>
-            <NavLink
               to="camera"
               style={{ textDecoration: "none" }}
             >
