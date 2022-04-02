@@ -24,7 +24,7 @@ fs.watch('/home/mendel/images', (eventType, filename) => {
       timeoutID = setTimeout( async () => {
         completed.push(filename);
         console.log(`filename provided: ${filename}`);
-        const buff = await readFile(`/home/mendel/images/${filename}`);
+        const buff = await fsPromises.readFile(`/home/mendel/images/${filename}`);
         nstClient.sendBuffer('postprocessing', buff);
         console.log('nstClient Sent Buffer')
         fs.rmSync(`/home/mendel/images/${filename}`)

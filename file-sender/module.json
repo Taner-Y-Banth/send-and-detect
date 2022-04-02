@@ -1,8 +1,0 @@
-{
-    "type": "nodejs",
-    "name": "file-sender",
-    "version": "1.0.41",
-    "excludes": [
-        "node_modules/"
-    ]
-}
