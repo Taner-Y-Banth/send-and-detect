@@ -1,14 +1,9 @@
-import AppBar from "@mui/material/AppBar";
 import Button from "@mui/material/Button";
-import Grid from "@mui/material/Grid";
-import IconButton from "@mui/material/IconButton";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
 import { NstrumentaClient } from "nstrumenta";
 import React from "react";
 import { useLocation } from "react-router-dom";
 import Webcam from "react-webcam";
-import "./App.css";
+import "./index.css";
 
 const FACING_MODE_USER = "user";
 const FACING_MODE_ENVIRONMENT = "environment";
@@ -32,7 +27,6 @@ const Camera = () => {
   const [imgSrc, setImgSrc] = React.useState(null);
   const nstClientRef = React.useRef<NstrumentaClient>(null);
   const [facingMode, setFacingMode] = React.useState(FACING_MODE_USER);
-  const [processedImageSrc, setProcessedImageSrc] = React.useState<string>();
   const [detections, setDetections] = React.useState<Array<Detection>>([]);
   const capture = React.useCallback(() => {
     const imageSrc = webcamRef.current?.getScreenshot();
@@ -92,12 +86,14 @@ const Camera = () => {
         const resultIndex = lines.findIndex(
           (line) => line == "-------RESULTS--------"
         );
-        for (let i = resultIndex + 1; i+3 < lines.length; i+=4) {
-          const score = Number(lines[i+2].split(':')[1]) * 100;
-          const label = `${lines[i]} ${score.toFixed(0)}`
+        for (let i = resultIndex + 1; i + 3 < lines.length; i += 4) {
+          const score = Number(lines[i + 2].split(":")[1]) * 100;
+          const label = `${lines[i]} ${score.toFixed(0)}`;
           const regex = /[0-9]+/g;
-          const [xmin, ymin, xmax, ymax] = lines[i+3].match(regex).map(Number);
-          newDetections.push({ label, xmin, xmax, ymin, ymax});
+          const [xmin, ymin, xmax, ymax] = lines[i + 3]
+            .match(regex)
+            .map(Number);
+          newDetections.push({ label, xmin, xmax, ymin, ymax });
         }
         setDetections(newDetections);
       });
@@ -108,57 +104,57 @@ const Camera = () => {
 
   return (
     <>
-          <div style={{ display: "grid" }} ref={webcamContainerRef}>
-            <Webcam
-              width={"100%"}
-              audio={false}
-              ref={webcamRef}
-              style={{
-                gridRowStart: 1,
-                gridColumnStart: 1,
-                zIndex: 1,
-              }}
-              forceScreenshotSourceSize={false}
-              screenshotFormat="image/png"
-              videoConstraints={{
-                ...videoConstraints,
-                facingMode,
-              }}
-            />
-            <svg
-              style={{
-                width: "100%",
-                height: "100%",
-                gridRowStart: 1,
-                gridColumnStart: 1,
-                zIndex: 2,
-              }}
-            >
-              {detections.map((detection) => {
-                const { xmin, xmax, ymin, ymax, label } = detection;
-                return (
-                  <>
-                    <rect
-                      fill="none"
-                      stroke="green"
-                      strokeWidth="2px"
-                      x={svgScalingWidth(xmin)}
-                      y={svgScalingHeight(ymin)}
-                      width={svgScalingWidth(xmax - xmin)}
-                      height={svgScalingHeight(ymax - ymin)}
-                    />
-                    <text
-                      x={svgScalingWidth(xmin + 3)}
-                      y={svgScalingHeight(ymin + 20)}
-                      fill="green"
-                    >
-                      {label}
-                    </text>
-                  </>
-                );
-              })}
-            </svg>
-          </div>
+      <div style={{ display: "grid" }} ref={webcamContainerRef}>
+        <Webcam
+          width={"100%"}
+          audio={false}
+          ref={webcamRef}
+          style={{
+            gridRowStart: 1,
+            gridColumnStart: 1,
+            zIndex: 1,
+          }}
+          forceScreenshotSourceSize={false}
+          screenshotFormat="image/png"
+          videoConstraints={{
+            ...videoConstraints,
+            facingMode,
+          }}
+        />
+        <svg
+          style={{
+            width: "100%",
+            height: "100%",
+            gridRowStart: 1,
+            gridColumnStart: 1,
+            zIndex: 2,
+          }}
+        >
+          {detections.map((detection) => {
+            const { xmin, xmax, ymin, ymax, label } = detection;
+            return (
+              <>
+                <rect
+                  fill="none"
+                  stroke="green"
+                  strokeWidth="2px"
+                  x={svgScalingWidth(xmin)}
+                  y={svgScalingHeight(ymin)}
+                  width={svgScalingWidth(xmax - xmin)}
+                  height={svgScalingHeight(ymax - ymin)}
+                />
+                <text
+                  x={svgScalingWidth(xmin + 3)}
+                  y={svgScalingHeight(ymin + 20)}
+                  fill="green"
+                >
+                  {label}
+                </text>
+              </>
+            );
+          })}
+        </svg>
+      </div>
       <input
         placeholder="Enter Interval Here"
         onBlur={(e) => {
