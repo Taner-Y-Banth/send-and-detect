@@ -1,4 +1,3 @@
-import fs from 'fs';
 import fsPromises from 'fs/promises';
 import Jimp from 'jimp';
 import minimist from 'minimist';
@@ -15,23 +14,28 @@ nstClient.addListener("open", () => {
     console.log("websocket opened successfully");
 
     nstClient.addSubscription('preprocessing', async (buff) => {
+        try {
+            const filename = `${Date.now()}.png`
+            const noAlpha = `${Date.now()}.1.png`
+            await fsPromises.writeFile(filename, buff);
 
-        await fsPromises.writeFile('infileone.png', buff);
+            Jimp.read(filename, async (err, image) => {
 
-        Jimp.read("infileone.png", async (err, image) => {
+                // setting colorType(2) forces the png to RGB (no alpha)
+                // the python reshape fails with RGBA images
 
-            if (err) {
-                throw new Error(err);
-            }
-            // setting colorType(2) forces the png to RGB (no alpha)
-            // the python reshape fails with RGBA images 
-            image.colorType(2).write("infile.png");
-            const {stdout} = await $`python3 detect_image.py -m ./test_data/ssd_mobilenet_v2_coco_quant_postprocess_edgetpu.tflite -l ./test_data/coco_labels.txt -i infile.png`
-            nstClient.send(
-                'visionText',
-                stdout
-            );
-        });
+                image.colorType(2).write(noAlpha);
+                const { stdout } = await $`python3 detect_image.py -m ./test_data/ssd_mobilenet_v2_coco_quant_postprocess_edgetpu.tflite -l ./test_data/coco_labels.txt -i ${noAlpha}`
+                await fsPromises.rm(filename)
+                await fsPromises.rm(noAlpha)
+                nstClient.send(
+                    'visionText',
+                    stdout
+                );
+            });
+        } catch (err) {
+            console.error(err)
+        };
     });
 });
 
