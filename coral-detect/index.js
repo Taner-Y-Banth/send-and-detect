@@ -15,24 +15,15 @@ nstClient.addListener("open", () => {
 
     nstClient.addSubscription('preprocessing', async (buff) => {
         try {
-            const filename = `${Date.now()}.png`
-            const noAlpha = `${Date.now()}.1.png`
+            const filename = `${Date.now()}.jpeg`
             await fsPromises.writeFile(filename, buff);
 
-            Jimp.read(filename, async (err, image) => {
-
-                // setting colorType(2) forces the png to RGB (no alpha)
-                // the python reshape fails with RGBA images
-
-                image.colorType(2).write(noAlpha);
-                const { stdout } = await $`python3 detect_image.py -m ./test_data/ssd_mobilenet_v2_coco_quant_postprocess_edgetpu.tflite -l ./test_data/coco_labels.txt -i ${noAlpha}`
+                const { stdout } = await $`python3 detect_image.py -m ./test_data/ssd_mobilenet_v2_coco_quant_postprocess_edgetpu.tflite -l ./test_data/coco_labels.txt -i ${filename}`
                 await fsPromises.rm(filename)
-                await fsPromises.rm(noAlpha)
                 nstClient.send(
                     'visionText',
                     stdout
                 );
-            });
         } catch (err) {
             console.error(err)
         };

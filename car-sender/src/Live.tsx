@@ -20,6 +20,10 @@ type Detection = {
   label: string;
 };
 
+type ParkingSpot = {
+  x: number;
+  y: number;
+};
 const Camera = () => {
   const [qty, setQty] = React.useState(null);
   const webcamRef = React.useRef(null);
@@ -28,6 +32,11 @@ const Camera = () => {
   const nstClientRef = React.useRef<NstrumentaClient>(null);
   const [facingMode, setFacingMode] = React.useState(FACING_MODE_USER);
   const [detections, setDetections] = React.useState<Array<Detection>>([]);
+  const [occupation, setOccupation] = React.useState(null);
+  const [parkingSpots, setParkingSpots] = React.useState<Array<ParkingSpot>>(
+    []
+  );
+
   const capture = React.useCallback(() => {
     const imageSrc = webcamRef.current?.getScreenshot();
     setImgSrc(imageSrc);
@@ -102,6 +111,8 @@ const Camera = () => {
     nstClientRef.current.connect({ wsUrl, apiKey });
   }, []);
 
+  console.log({ parkingSpots });
+
   return (
     <>
       <div style={{ display: "grid" }} ref={webcamContainerRef}>
@@ -115,7 +126,7 @@ const Camera = () => {
             zIndex: 1,
           }}
           forceScreenshotSourceSize={false}
-          screenshotFormat="image/jpeg"
+          screenshotFormat="image/png"
           videoConstraints={{
             ...videoConstraints,
             facingMode,
@@ -154,6 +165,48 @@ const Camera = () => {
             );
           })}
         </svg>
+        <svg
+          style={{
+            width: "100%",
+            height: "100%",
+            gridRowStart: 1,
+            gridColumnStart: 1,
+            zIndex: 3,
+          }}
+          onClick={(event) => {
+            setParkingSpots([
+              ...parkingSpots,
+              {
+                x: event.pageX / event.currentTarget.clientWidth,
+                y: event.pageY / event.currentTarget.clientHeight,
+              },
+            ]);
+            console.log(parkingSpots);
+          }}
+        >
+          {parkingSpots.map((parkingSpot, i) => {
+            const { x, y } = parkingSpot;
+            return (
+              <circle
+                onClick={(event) => {
+                  event.stopPropagation();
+                  const filteredSpots = parkingSpots
+                    .map((parkingSpot, j) => {
+                      if (i !== j) {
+                        return parkingSpot;
+                      }
+                    })
+                    .filter((spot) => spot !== undefined);
+                  setParkingSpots(filteredSpots);
+                }}
+                fill="green"
+                cx={`${(x * 100).toFixed(2)}%`}
+                cy={`${(y * 100).toFixed(2)}%`}
+                r="10"
+              />
+            );
+          })}
+        </svg>
       </div>
       <input
         placeholder="Enter Interval Here"
@@ -167,6 +220,10 @@ const Camera = () => {
       <Button color="inherit" variant="outlined" onClick={capture}>
         Capture photo
       </Button>
+      {parkingSpots.map((parkingSpot, i) => {
+        const { x, y } = parkingSpot;
+        return <div>{JSON.stringify(parkingSpot)}</div>;
+      })}
     </>
   );
 };
