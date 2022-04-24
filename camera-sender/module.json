@@ -1,9 +1,0 @@
-{
-    "$schema": "https://raw.githubusercontent.com/nstrumenta/nstrumenta/main/module.schema.json",
-    "type": "sandbox",
-    "name": "camera-sender",
-    "version": "1.0.17",
-    "includes": [
-        "build"
-    ]
-}

@@ -1,9 +1,0 @@
-{
-    "$schema": "https://raw.githubusercontent.com/nstrumenta/nstrumenta/main/module.schema.json",
-    "type": "sandbox",
-    "name": "car-sender",
-    "version": "1.0.0",
-    "includes": [
-        "build"
-    ]
-}
