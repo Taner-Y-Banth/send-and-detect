@@ -3,6 +3,7 @@ import { NstrumentaClient } from "nstrumenta";
 import React from "react";
 import { useLocation } from "react-router-dom";
 import Webcam from "react-webcam";
+import { v4 as uuidv4 } from "uuid";
 import "./index.css";
 
 const FACING_MODE_USER = "user";
@@ -29,10 +30,10 @@ const Camera = () => {
   const webcamRef = React.useRef(null);
   const webcamContainerRef = React.useRef(null);
   const [imgSrc, setImgSrc] = React.useState(null);
+  const [responseChannel, setResponseChannel] = React.useState(uuidv4());
   const nstClientRef = React.useRef<NstrumentaClient>(null);
   const [facingMode, setFacingMode] = React.useState(FACING_MODE_USER);
   const [detections, setDetections] = React.useState<Array<Detection>>([]);
-  const [occupation, setOccupation] = React.useState(null);
   const [parkingSpots, setParkingSpots] = React.useState<Array<ParkingSpot>>(
     []
   );
@@ -41,10 +42,7 @@ const Camera = () => {
     const imageSrc = webcamRef.current?.getScreenshot();
     setImgSrc(imageSrc);
     const data = imageSrc.split(",")[1];
-    nstClientRef.current?.sendBuffer(
-      "preprocessing",
-      Uint8Array.from(atob(data), (c) => c.charCodeAt(0))
-    );
+    nstClientRef.current?.send("preprocessing", { data, responseChannel });
   }, [webcamRef, setImgSrc]);
 
   React.useEffect(() => {
@@ -88,9 +86,9 @@ const Camera = () => {
     nstClientRef.current = new NstrumentaClient();
 
     nstClientRef.current.addListener("open", () => {
-      nstClientRef.current.addSubscription("visionText", (visionText) => {
-        console.log(visionText);
-        const lines = visionText.split("\n");
+      nstClientRef.current.addSubscription(responseChannel, (response) => {
+        console.log(response);
+        const lines = response.split("\n");
         const newDetections: Array<Detection> = [];
         const resultIndex = lines.findIndex(
           (line) => line == "-------RESULTS--------"
@@ -126,7 +124,7 @@ const Camera = () => {
             zIndex: 1,
           }}
           forceScreenshotSourceSize={false}
-          screenshotFormat="image/png"
+          screenshotFormat="image/jpeg"
           videoConstraints={{
             ...videoConstraints,
             facingMode,

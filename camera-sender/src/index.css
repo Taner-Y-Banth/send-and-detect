@@ -1,13 +1,5 @@
-input {
-  text-align: center;
-  background-color: inherit;
-  border-style: none;
-}
-
-input::placeholder {
-  color: white;
-  font-size: medium;
-  font-variant: inherit;
+select{
+  border-width: 64px;
 }
 
 code {
@@ -17,11 +9,7 @@ code {
 
 html {
   text-align: left;
-  background-color: rgb(10, 47, 82);
-}
-
-table {
-  background-color: rgb(10, 47, 82);
+  background-color: rgb(70, 183, 189);
 }
 
 main {

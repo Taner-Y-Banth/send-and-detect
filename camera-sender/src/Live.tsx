@@ -1,9 +1,11 @@
+import { FitScreen } from "@mui/icons-material";
+import { Grid, InputLabel, MenuItem, Select } from "@mui/material";
 import Button from "@mui/material/Button";
 import { NstrumentaBrowserClient } from "nstrumenta/dist/browser/client";
 import React from "react";
 import { useLocation } from "react-router-dom";
 import Webcam from "react-webcam";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 import "./index.css";
 
 const FACING_MODE_USER = "user";
@@ -22,7 +24,9 @@ type Detection = {
 };
 
 const Camera = () => {
-  const [qty, setQty] = React.useState(null);
+  const [captureInterval, setCaptureInterval] = React.useState<number | string>(
+    1
+  );
   const webcamRef = React.useRef(null);
   const webcamContainerRef = React.useRef(null);
   const [responseChannel, setResponseChannel] = React.useState(uuidv4());
@@ -30,24 +34,23 @@ const Camera = () => {
   const nstClientRef = React.useRef<NstrumentaBrowserClient>(null);
   const [facingMode, setFacingMode] = React.useState(FACING_MODE_USER);
   const [detections, setDetections] = React.useState<Array<Detection>>([]);
+
   const capture = React.useCallback(() => {
     const imageSrc = webcamRef.current?.getScreenshot();
+    if (!imageSrc) return;
     setImgSrc(imageSrc);
     const data = imageSrc.split(",")[1];
-    nstClientRef.current?.send(
-      "preprocessing",
-      {data, responseChannel}
-    );
+    nstClientRef.current?.send("preprocessing", { data, responseChannel });
   }, [webcamRef, setImgSrc]);
 
   React.useEffect(() => {
-    if (qty && !isNaN(qty)) {
+    if (captureInterval && typeof captureInterval !== "string") {
       const interval = setInterval(() => {
         capture();
-      }, qty * 1000);
+      }, captureInterval * 1000);
       return () => clearInterval(interval);
     }
-  }, [qty]);
+  }, [captureInterval]);
 
   const svgScalingWidth = (value) => {
     return `${(100 * value) / webcamContainerRef.current?.offsetWidth}%`;
@@ -106,7 +109,12 @@ const Camera = () => {
 
   return (
     <>
-      <div style={{ display: "grid" }} ref={webcamContainerRef}>
+      <div
+        style={{
+          display: "grid",
+        }}
+        ref={webcamContainerRef}
+      >
         <Webcam
           width={"100%"}
           audio={false}
@@ -157,18 +165,38 @@ const Camera = () => {
           })}
         </svg>
       </div>
-      <input
-        placeholder="Enter Interval Here"
-        onBlur={(e) => {
-          setQty(Number.parseFloat(e.target.value));
-        }}
-      />
-      <Button color="inherit" variant="outlined" onClick={handleClick}>
-        Switch View
-      </Button>
-      <Button color="inherit" variant="outlined" onClick={capture}>
-        Capture photo
-      </Button>
+      <Grid container spacing={2} direction={"row"}>
+        <p></p>
+      </Grid>
+      <Grid container spacing={2} direction={"row"}>
+        <Grid item>
+          <InputLabel id="select-label">Interval</InputLabel>
+          <Select
+            labelId="select-label"
+            id="select"
+            value={captureInterval}
+            label="Interval"
+            onChange={(e) => {
+              setCaptureInterval(e.target.value);
+            }}
+          >
+            <MenuItem value="off">off</MenuItem>
+            <MenuItem value={0.5}>0.5s</MenuItem>
+            <MenuItem value={1}>1s</MenuItem>
+            <MenuItem value={2}>2s</MenuItem>
+          </Select>
+        </Grid>
+        <Grid item>
+          <Button color="inherit" variant="outlined" onClick={handleClick}>
+            Switch View
+          </Button>
+        </Grid>
+        <Grid item>
+          <Button color="inherit" variant="outlined" onClick={capture}>
+            Capture photo
+          </Button>
+        </Grid>
+      </Grid>
     </>
   );
 };
