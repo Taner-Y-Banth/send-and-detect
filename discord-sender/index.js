@@ -13,10 +13,10 @@ const client = new DiscordClient({ intents: [Intents.FLAGS.GUILDS] });
 nstClient.addListener("open", () => {
     console.log("websocket opened successfully");
     client.login(token)
-    nstClient.addSubscription('alert', (cakelie) => {
-        console.log(cakelie);
+    nstClient.addSubscription('alert', (imageTag) => {
+        console.log(imageTag);
         const channel = client.channels.cache.get('970144599098146826');
-        channel.send('***APPROACHING*** <@713764004383686666>');
+        channel.send(`***APPROACHING*** \n <@713764004383686666> \n ${imageTag}`);
     });
 });
 

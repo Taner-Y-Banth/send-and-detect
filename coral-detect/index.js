@@ -20,10 +20,12 @@ nstClient.addListener("open", () => {
 
             const { stdout } = await $`python3 detect_image.py -m ./test_data/ssd_mobilenet_v2_coco_quant_postprocess_edgetpu.tflite -l ./test_data/coco_labels.txt -i ${filename}`
             await fsPromises.rm(filename)
+            const imageTag = msg.imageTag
             nstClient.send(
-                msg.responseChannel,
-                stdout
-            );
+                msg.responseChannel, {
+                imageTag,
+                stdout,
+            });
         } catch (err) {
             console.error(err)
         };

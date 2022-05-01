@@ -78,5 +78,5 @@ typings/
 # React build
 build/
 
-# vscode
+# launch vscode
 .vscode/
