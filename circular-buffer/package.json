@@ -1,0 +1,12 @@
+{
+  "type": "module",
+  "scripts": {
+    "start": "node index"
+  },
+  "dependencies": {
+    "lru_map": "^0.4.1",
+    "map-lru": "^2.0.0",
+    "minimist": "^1.2.6",
+    "nstrumenta": "^3.0.6"
+  }
+}

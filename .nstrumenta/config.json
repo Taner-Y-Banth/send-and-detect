@@ -1,24 +1,29 @@
 {
-    "modules": [
-        {
-            "type": "sandbox",
-            "name": "camera-sender",
-            "folder": "camera-sender"
-        },
-        {
-            "type": "sandbox",
-            "name": "car-sender",
-            "folder": "car-sender"
-        },
-        {
-            "type": "nodejs",
-            "name": "coral-detect",
-            "folder": "coral-detect"
-        },
-        {
-            "type": "nodejs",
-            "name": "discord-sender",
-            "folder": "discord-sender"
-        }
-    ]
+  "modules": [
+    {
+      "type": "sandbox",
+      "name": "camera-sender",
+      "folder": "camera-sender"
+    },
+    {
+      "type": "sandbox",
+      "name": "car-sender",
+      "folder": "car-sender"
+    },
+    {
+      "type": "nodejs",
+      "name": "coral-detect",
+      "folder": "coral-detect"
+    },
+    {
+      "type": "nodejs",
+      "name": "discord-sender",
+      "folder": "discord-sender"
+    },
+    {
+      "type": "nodejs",
+      "name": "circular-buffer",
+      "folder": "circular-buffer"
+    }
+  ]
 }
