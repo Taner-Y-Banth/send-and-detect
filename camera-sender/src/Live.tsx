@@ -87,6 +87,7 @@ const Camera = () => {
     if (apiKeyParam) {
       localStorage.setItem("apiKey", apiKeyParam);
     }
+    
     const apiLocalStore = localStorage.getItem("apiKey");
     const apiKey = apiKeyParam ? apiKeyParam : apiLocalStore;
     const discordParam = new URLSearchParams(search).get("discord");
@@ -100,7 +101,7 @@ const Camera = () => {
 
     nstClientRef.current.addListener("open", () => {
       nstClientRef.current.addSubscription(responseChannel, (response) => {
-        const stdout = response.stdout
+        const stdout = response.stdout;
         console.log(stdout);
         const lines = stdout.split("\n");
         const newDetections: Array<Detection> = [];
@@ -110,17 +111,25 @@ const Camera = () => {
         for (let i = resultIndex + 1; i + 3 < lines.length; i += 4) {
           const score = Number(lines[i + 2].split(":")[1]) * 100;
           const label = `${lines[i]}`;
-          const imageTag = response.imageTag
+          const imageTag = response.imageTag;
           const regex = /[0-9]+/g;
           const [xmin, ymin, xmax, ymax] = lines[i + 3]
             .match(regex)
             .map(Number);
-          newDetections.push({ score, label, imageTag, xmin, xmax, ymin, ymax });
+          newDetections.push({
+            score,
+            label,
+            imageTag,
+            xmin,
+            xmax,
+            ymin,
+            ymax,
+          });
         }
         setDetections(newDetections);
 
         const labels = newDetections.map((detection) => detection.label);
-        const imageTag = response.imageTag
+        const imageTag = response.imageTag;
 
         if (occupation === "present" && !labels.includes("person")) {
           occupation = "empty";
@@ -130,7 +139,7 @@ const Camera = () => {
           labels.includes("person") &&
           occupation === "empty"
         ) {
-          nstClientRef.current.send("alert", imageTag );
+          nstClientRef.current.send("alert", imageTag);
           occupation = "present";
         }
       });
@@ -173,7 +182,8 @@ const Camera = () => {
           }}
         >
           {detections.map((detection) => {
-            const { xmin, xmax, ymin, ymax, label, score, imageTag } = detection;
+            const { xmin, xmax, ymin, ymax, label, score, imageTag } =
+              detection;
             return (
               <>
                 <rect
