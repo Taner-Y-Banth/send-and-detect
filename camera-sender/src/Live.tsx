@@ -1,4 +1,4 @@
-import { Grid, InputLabel, MenuItem, Select } from "@mui/material";
+import { Grid, InputLabel, MenuItem, Select, Switch } from "@mui/material";
 import Button from "@mui/material/Button";
 import { NstrumentaBrowserClient } from "nstrumenta/dist/browser/client";
 import React from "react";
@@ -31,6 +31,7 @@ const Camera = () => {
   const [captureInterval, setCaptureInterval] = React.useState<number | string>(
     1
   );
+  const [discordStatus, setDiscordStatus] = React.useState<string>(null);
   const webcamRef = React.useRef(null);
   const webcamContainerRef = React.useRef(null);
   const [responseChannel, setResponseChannel] = React.useState(uuidv4());
@@ -51,6 +52,15 @@ const Camera = () => {
       imageTag,
     });
   }, [webcamRef, setImgSrc]);
+
+  const discord = React.useCallback(() => {
+    if (discordStatus === "true") {
+      setDiscordStatus("false");
+    }
+    if (discordStatus === "false" || discordStatus === null) {
+      setDiscordStatus("true");
+    }
+  }, []);
 
   React.useEffect(() => {
     if (captureInterval && typeof captureInterval !== "string") {
@@ -87,15 +97,9 @@ const Camera = () => {
     if (apiKeyParam) {
       localStorage.setItem("apiKey", apiKeyParam);
     }
-    
+
     const apiLocalStore = localStorage.getItem("apiKey");
     const apiKey = apiKeyParam ? apiKeyParam : apiLocalStore;
-    const discordParam = new URLSearchParams(search).get("discord");
-    if (discordParam) {
-      localStorage.setItem("discord", discordParam);
-    }
-    const discordLocalStore = localStorage.getItem("discord");
-    const discord = discordParam ? discordParam : discordLocalStore;
 
     nstClientRef.current = new NstrumentaBrowserClient();
 
@@ -135,7 +139,7 @@ const Camera = () => {
           occupation = "empty";
         }
         if (
-          discord === "true" &&
+          discordStatus === "true" &&
           labels.includes("person") &&
           occupation === "empty"
         ) {
@@ -215,7 +219,10 @@ const Camera = () => {
         </svg>
       </div>
       <Grid container spacing={2} direction={"row"}>
-        <p></p>
+        <Switch
+          onChange={discord}
+          inputProps={{ "aria-label": "controlled" }}
+        />
       </Grid>
       <Grid container spacing={2} direction={"row"}>
         <Grid item>

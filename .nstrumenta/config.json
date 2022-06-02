@@ -24,6 +24,16 @@
       "type": "nodejs",
       "name": "circular-buffer",
       "folder": "circular-buffer"
-    }
+    },
+    {
+      "type": "nodejs",
+      "name": "discord-sender-wol",
+      "folder": "discord-sender-wol"
+  },
+  {
+      "type": "nodejs",
+      "name": "receiver",
+      "folder": "receiver"
+  }
   ]
 }
