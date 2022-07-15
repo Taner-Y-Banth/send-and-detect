@@ -15,20 +15,22 @@ nstClient.addListener("open", () => {
     nstClient.addSubscription('preprocessing', async (msg) => {
         try {
             const buff = Uint8Array.from(atob(msg.data), (c) => c.charCodeAt(0))
-            const filename = `-i ${msg.responseChannel}${Date.now()}.jpeg`
+            const filename = `${msg.responseChannel}${Date.now()}.jpeg`
             await fsPromises.writeFile(filename, buff);
-            const thresholdArg = argv.threshold ? '-t ' + argv.threshold : ""
-            const countArg = argv.count ? '-c ' + argv.count : ""
-            const modelArg = argv.model ? '-m ' + argv.model : ""
-            const labelArg = argv.label ? '-l ' + argv.label : ""
-            const command = [filename,
+            const thresholdArg = argv.threshold ? '-t=' + argv.threshold : ""
+            const countArg = argv.count ? '-c=' + argv.count : ""
+            const modelArg = argv.model ? '-m=' + argv.model : ""
+            const labelArg = argv.label ? '-l=' + argv.label : ""
+            const command = [
+                argv.script,
+                '-i=' + filename,
                 countArg,
                 thresholdArg,
                 modelArg,
                 labelArg
             ]
             console.log(command)
-            const { stdout } = await $`python3 detect_image.py ${command}`
+            const { stdout } = await $`python3 ${command}`
             await fsPromises.rm(filename)
             const imageTag = msg.imageTag
             nstClient.send(

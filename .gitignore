@@ -80,3 +80,6 @@ build/
 
 # launch vscode
 .vscode/
+
+#google-coral
+pycoral/
