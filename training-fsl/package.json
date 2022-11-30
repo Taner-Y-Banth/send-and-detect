@@ -1,5 +1,8 @@
 {
   "type": "module",
+  "scripts": {
+    "start": "node index"
+  },
   "dependencies": {
     "minimist": "^1.2.6",
     "nstrumenta": "^3.0.9",

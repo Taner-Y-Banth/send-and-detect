@@ -1,0 +1,9 @@
+{
+    "$schema": "https://raw.githubusercontent.com/nstrumenta/nstrumenta/main/module.schema.json",
+    "type": "nodejs",
+    "name": "training-fsl",
+    "version": "1.0.23",
+    "excludes": [
+        "node_modules/"
+    ]
+}

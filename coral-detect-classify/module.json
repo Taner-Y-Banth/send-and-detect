@@ -1,0 +1,9 @@
+{
+    "$schema": "https://raw.githubusercontent.com/nstrumenta/nstrumenta/main/module.schema.json",
+    "type": "nodejs",
+    "name": "coral-detect-classify",
+    "version": "1.0.4",
+    "excludes": [
+        "node_modules/"
+    ]
+}

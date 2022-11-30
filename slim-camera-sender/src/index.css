@@ -1,0 +1,21 @@
+select{
+  border-width: 64px;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+html {
+  text-align: left;
+  background-color: rgb(70, 183, 189);
+}
+
+main {
+  background-color: rgb(10, 47, 82);
+}
+
+body {
+  height: 100%;
+}

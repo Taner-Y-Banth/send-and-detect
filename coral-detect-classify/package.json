@@ -1,0 +1,13 @@
+{
+  "type": "module",
+  "dependencies": {
+    "jimp": "^0.16.1",
+    "minimist": "^1.2.5",
+    "nstrumenta": "^3.0.26",
+    "ws": "^8.4.2",
+    "zx": "^4.3.0"
+  },
+  "scripts": {
+    "start": "node index.js"
+  }
+}

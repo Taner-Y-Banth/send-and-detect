@@ -7,8 +7,18 @@
     },
     {
       "type": "sandbox",
-      "name": "car-sender",
-      "folder": "car-sender"
+      "name": "slim-camera-sender",
+      "folder": "slim-camera-sender"
+    },
+    {
+      "type": "sandbox",
+      "name": "camera-classify",
+      "folder": "camera-classify"
+    },
+    {
+      "type": "sandbox",
+      "name": "camera-sender-fsl",
+      "folder": "camera-sender-fsl"
     },
     {
       "type": "nodejs",
@@ -29,11 +39,21 @@
       "type": "nodejs",
       "name": "discord-sender-wol",
       "folder": "discord-sender-wol"
-  },
-  {
+    },
+    {
       "type": "nodejs",
       "name": "receiver",
       "folder": "receiver"
-  }
+    },
+    {
+      "type": "nodejs",
+      "name": "training-fsl",
+      "folder": "training-fsl"
+    },
+    {
+      "type": "nodejs",
+      "name": "coral-detect-classify",
+      "folder": "coral-detect-classify"
+    }
   ]
 }

@@ -19,10 +19,11 @@ nstClient.addListener("open", () => {
             await fsPromises.writeFile(filename, buff);
             const thresholdArg = argv.threshold ? '-t=' + argv.threshold : ""
             const countArg = argv.count ? '-c=' + argv.count : ""
-            const modelArg = argv.model ? '-m=' + argv.model : ""
-            const labelArg = argv.label ? '-l=' + argv.label : ""
+            const modelArg = argv.model ? '-m=' + argv.model : "-m=test_data/ssd_mobilenet_v2_coco_quant_postprocess_edgetpu.tflite"
+            const labelArg = argv.label ? '-l=' + argv.label : "-l=test_data/coco_labels.txt"
+            const scriptArg = argv.script ? argv.script : "detect_image.py"
             const command = [
-                argv.script,
+                scriptArg,
                 '-i=' + filename,
                 countArg,
                 thresholdArg,

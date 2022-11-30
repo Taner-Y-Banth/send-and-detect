@@ -219,12 +219,6 @@ const Camera = () => {
         </svg>
       </div>
       <Grid container spacing={2} direction={"row"}>
-        <Switch
-          onChange={discord}
-          inputProps={{ "aria-label": "controlled" }}
-        />
-      </Grid>
-      <Grid container spacing={2} direction={"row"}>
         <Grid item>
           <InputLabel id="select-label">Interval</InputLabel>
           <Select
