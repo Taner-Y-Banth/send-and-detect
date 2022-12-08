@@ -22,8 +22,8 @@ nstClient.addListener("open", () => {
                     type: 'object',
                     properties: {
                         timestamp: {
-                            type: 'object',
-                            title: 'time',
+                            type: 'integer',
+                            title: 'timestamp',
                             properties: {
                                 sec: {
                                     type: 'integer',
@@ -54,23 +54,30 @@ nstClient.addListener("open", () => {
                     },
                 },
                 channel: {
-                    topic: 'preprocessing',
+                    topic: 'images',
                     messageEncoding: 'json',
                 },
             }
         ],
     });
     nstClient.addSubscription('preprocessing', (msg) => {
-        const timestamp = Date.now();
+        const timestampMs = Date.now();
+        const sec = Math.floor(timestampMs * 1e-3);
+        const nsec = (timestampMs - sec * 1e3) * 1e6;
         clearTimeout(timeoutId);
         timeoutId = setTimeout(() => {
             nstClient.finishLog(logName);
+            console.log('log complete');
         }, 3000);
+        console.log(timestampMs)
         nstClient.send('images', {
             data: msg.data,
-            frame_id: `${timestamp}`,
+            frame_id: `${timestampMs}`,
             format: 'image/jpeg',
-            timestamp,
+            timestamp: {
+                sec,
+                nsec
+            },
         });
     });
 });
