@@ -1,4 +1,4 @@
-import { Grid } from "@mui/material";
+import { Grid, Input } from "@mui/material";
 import Button from "@mui/material/Button";
 import { NstrumentaBrowserClient } from "nstrumenta/dist/browser/client";
 import React from "react";
@@ -107,16 +107,16 @@ const Camera = () => {
         </Grid>
         <Grid item>
           <Button color="inherit" variant="outlined" onClick={train}>
-            Train Model
+            Train
           </Button>
         </Grid>
         <Grid item>
           <Button color="inherit" variant="outlined" onClick={capture}>
-            Capture photo
+            Capture
           </Button>
         </Grid>
         <Grid item>
-          <input onChange={handleChange}/>
+          <Input onChange={handleChange} defaultValue="object 1"/>
         </Grid>
       </Grid>
     </>

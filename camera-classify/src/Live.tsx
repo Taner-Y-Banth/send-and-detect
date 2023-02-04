@@ -1,4 +1,11 @@
-import { Grid, InputLabel, MenuItem, Select, Switch } from "@mui/material";
+import {
+  Grid,
+  Input,
+  InputLabel,
+  MenuItem,
+  Select,
+  Switch,
+} from "@mui/material";
 import Button from "@mui/material/Button";
 import { NstrumentaBrowserClient } from "nstrumenta/dist/browser/client";
 import React from "react";
@@ -27,7 +34,8 @@ const Camera = () => {
   const [captureInterval, setCaptureInterval] = React.useState<number | string>(
     1
   );
-  const [discordStatus, setDiscordStatus] = React.useState<string>(null);
+  const { search } = useLocation();
+  const [labelName, setLabelName] = React.useState("obj");
   const webcamRef = React.useRef(null);
   const webcamContainerRef = React.useRef(null);
   const [responseChannel, setResponseChannel] = React.useState(uuidv4());
@@ -73,8 +81,6 @@ const Camera = () => {
     );
   }, []);
 
-  const { search } = useLocation();
-
   React.useEffect(() => {
     const wsUrlParam = new URLSearchParams(search).get("wsUrl");
     const wsUrl = wsUrlParam
@@ -100,22 +106,51 @@ const Camera = () => {
           (line) => line == "-------RESULTS--------"
         );
         const label = lines[resultIndex + 1].split(":")[0];
-        const score = Number(lines[resultIndex + 1].split(":")[1])*100;
+        const score = Number(lines[resultIndex + 1].split(":")[1]) * 100;
         const imageTag = response.imageTag;
 
         newDetections.push({
           score,
           label,
-          imageTag
+          imageTag,
         });
         setDetections(newDetections);
-
       });
     });
 
     nstClientRef.current.connect({ wsUrl, apiKey });
   }, []);
 
+  const train = React.useCallback(() => {
+      const msg = "train";
+      nstClientRef.current?.send("retrain", { msg });
+    }, []);
+
+  const reset = React.useCallback(() => {
+      const msg = "reset";
+      nstClientRef.current?.send("reset", { msg });
+    }, []);
+
+    const handleChange = React.useCallback((event) => {
+      setLabelName(event.target.value);
+    }, [labelName]);
+
+    const dataSet = React.useCallback(() => {
+      console.log(labelName);
+      if (labelName) {
+        const imageSrc = webcamRef.current?.getScreenshot();
+        if (!imageSrc) return;
+        setImgSrc(imageSrc);
+        const data = imageSrc.split(",")[1];
+        const dir = labelName;
+        nstClientRef.current?.send("fsl-folder", {
+          data,
+          dir,
+        });
+        console.log("Added to data!");
+      }
+    }, [labelName, webcamRef, setImgSrc]);
+  
   return (
     <>
       <div
@@ -150,52 +185,50 @@ const Camera = () => {
           }}
         >
           {detections.map((detection) => {
-            const {label, score, imageTag } =
-              detection;
+            const { label, score, imageTag } = detection;
             return (
               <>
                 <text
-                  x={svgScalingWidth(3)}
-                  y={svgScalingHeight(20)}
+                  x={svgScalingWidth(5)}
+                  y={svgScalingHeight(30)}
                   fill="green"
+                  fontSize="35"
                 >
-                  {`${label} ${score.toFixed(0)}%`}
+                    {`${label} ${score.toFixed(0)}%`}
                 </text>
               </>
             );
           })}
         </svg>
       </div>
+
       <Grid container spacing={2} direction={"row"}>
-        <Grid item>
-          <InputLabel id="select-label">Interval</InputLabel>
-          <Select
-            labelId="select-label"
-            id="select"
-            value={captureInterval}
-            label="Interval"
-            onChange={(e) => {
-              setCaptureInterval(e.target.value);
-            }}
-          >
-            <MenuItem value="off">off</MenuItem>
-            <MenuItem value={0.5}>0.5s</MenuItem>
-            <MenuItem value={1}>1s</MenuItem>
-            <MenuItem value={2}>2s</MenuItem>
-          </Select>
-        </Grid>
         <Grid item>
           <Button color="inherit" variant="outlined" onClick={handleClick}>
             Switch View
           </Button>
         </Grid>
         <Grid item>
-          <Button color="inherit" variant="outlined" onClick={capture}>
-            Capture photo
+          <Button color="inherit" variant="outlined" onClick={train}>
+            Train
           </Button>
+        </Grid>
+        <Grid item>
+          <Button color="inherit" variant="outlined" onClick={dataSet}>
+            Capture
+          </Button>
+        </Grid>
+        <Grid item>
+          <Button color="inherit" variant="outlined" onClick={reset}>
+            Reset
+          </Button>
+        </Grid>
+        <Grid item>
+          <Input onChange={handleChange} defaultValue="object 1" />
         </Grid>
       </Grid>
     </>
+    
   );
 };
 

@@ -13,9 +13,10 @@ const nstClient = new NstrumentaClient();
 nstClient.addListener("open", () => {
 
     nstClient.addSubscription('fsl-folder', async (msg) => {
-        console.log(msg);
-
-        const directory = "./data/" + msg.dir;
+        
+        const msgDir = msg.dir.replace("/", "-").replace(" ", "");
+        console.log(msgDir);
+        const directory = "./data/" + msgDir;
 
         if (!existsSync('./data')) {
             mkdirSync('data', () => { });
@@ -31,10 +32,18 @@ nstClient.addListener("open", () => {
         console.log("file written", filename);
 
     });
+
     nstClient.addSubscription('retrain', async (msg) => {
-        await $`python3 imprinting_learning.py --model model/mobilenet_v1_1.0_224_l2norm_quant_edgetpu.tflite --data data/ --output /home/mendel/retrained_imprinting_model.tflite`
-        nstClient.send('imprint', 'train-comp');
-        console.log('training completed');
+        try {
+            await $`python3 imprinting_learning.py --model model/mobilenet_v1_1.0_224_l2norm_quant_edgetpu.tflite --data data/ --output /home/mendel/retrained_imprinting_model.tflite`
+            nstClient.send('imprint', 'train-comp');
+            console.log('training completed');
+        } catch (err) {
+            console.error(err);
+        };
+    });
+
+    nstClient.addSubscription('reset', (msg) => {
         rmdirSync('data', { recursive: true, force: true });
     });
 })
