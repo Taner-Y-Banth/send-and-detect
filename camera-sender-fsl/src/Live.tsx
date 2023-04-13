@@ -70,7 +70,7 @@ const Camera = () => {
   }, []);
 
   const handleChange = React.useCallback((event) => {
-    searchParams.set('folder', event.target.value);
+    searchParams.set("folder", event.target.value);
     setSearchParams(searchParams);
   }, []);
 
@@ -116,7 +116,7 @@ const Camera = () => {
           </Button>
         </Grid>
         <Grid item>
-          <Input onChange={handleChange} defaultValue="object 1"/>
+          <Input onChange={handleChange} defaultValue="object 1" />
         </Grid>
       </Grid>
     </>

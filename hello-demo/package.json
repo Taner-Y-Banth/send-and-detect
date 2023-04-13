@@ -5,7 +5,7 @@
   },
   "dependencies": {
     "minimist": "^1.2.6",
-    "nstrumenta": "^3.0.40",
-    "zx": "^6.1.0"
+    "nstrumenta": "^3.0.42",
+    "ws": "^8.4.2"
   }
 }
