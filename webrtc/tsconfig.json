@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ESNext"
+    ],
+    "allowSyntheticDefaultImports": true,
+    "moduleResolution": "Node",
+    "jsx": "react-jsx",
+    "sourceMap": true
+  },
+  "include": [
+    "src"
+  ]
+}

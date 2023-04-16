@@ -1,4 +1,4 @@
-import { Grid, InputLabel, MenuItem, Select, Switch } from "@mui/material";
+import { Grid, InputLabel, MenuItem, Select } from "@mui/material";
 import Button from "@mui/material/Button";
 import { NstrumentaBrowserClient } from "nstrumenta/dist/browser/client";
 import React from "react";
@@ -6,6 +6,7 @@ import { useLocation } from "react-router-dom";
 import Webcam from "react-webcam";
 import { v4 as uuidv4 } from "uuid";
 import "./index.css";
+import { createFFmpeg, fetchFile } from "@ffmpeg/ffmpeg";
 
 const FACING_MODE_USER = "user";
 const FACING_MODE_ENVIRONMENT = "environment";
@@ -31,7 +32,6 @@ const Camera = () => {
   const [captureInterval, setCaptureInterval] = React.useState<number | string>(
     1
   );
-  const [discordStatus, setDiscordStatus] = React.useState<string>(null);
   const webcamRef = React.useRef(null);
   const webcamContainerRef = React.useRef(null);
   const [responseChannel, setResponseChannel] = React.useState(uuidv4());
@@ -52,15 +52,6 @@ const Camera = () => {
       imageTag,
     });
   }, [webcamRef, setImgSrc]);
-
-  const discord = React.useCallback(() => {
-    if (discordStatus === "true") {
-      setDiscordStatus("false");
-    }
-    if (discordStatus === "false" || discordStatus === null) {
-      setDiscordStatus("true");
-    }
-  }, []);
 
   React.useEffect(() => {
     if (captureInterval && typeof captureInterval !== "string") {
@@ -131,21 +122,6 @@ const Camera = () => {
           });
         }
         setDetections(newDetections);
-
-        const labels = newDetections.map((detection) => detection.label);
-        const imageTag = response.imageTag;
-
-        if (occupation === "present" && !labels.includes("person")) {
-          occupation = "empty";
-        }
-        if (
-          discordStatus === "true" &&
-          labels.includes("person") &&
-          occupation === "empty"
-        ) {
-          nstClientRef.current.send("alert", imageTag);
-          occupation = "present";
-        }
       });
     });
 
@@ -176,6 +152,7 @@ const Camera = () => {
             facingMode,
           }}
         />
+        
         <svg
           style={{
             width: "100%",

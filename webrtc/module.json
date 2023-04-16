@@ -1,0 +1,5 @@
+{
+  "type": "sandbox",
+  "includes": ["dist/"],
+  "prePublishCommand": "npm run build"
+}
