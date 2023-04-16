@@ -1,0 +1,16 @@
+{
+  "scripts": {
+    "start": "ts-node index"
+  },
+  "dependencies": {
+    "@ffmpeg/core": "^0.11.0",
+    "@ffmpeg/ffmpeg": "^0.11.6",
+    "minimist": "^1.2.6",
+    "nstrumenta": "^3.0.37",
+    "ws": "^8.4.2"
+  },
+  "devDependencies": {
+    "@types/minimist": "^1.2.2",
+    "ts-node": "^10.9.1"
+  }
+}
